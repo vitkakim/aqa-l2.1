@@ -1,1 +1,1 @@
-# CI [![Build status](https://ci.appveyor.com/api/projects/status/sl0ix93c6kovx77v/branch/main?svg=true)](https://ci.appveyor.com/project/vitkakim/aqa-l2-1/branch/main)
+# CI [![Build status](https://ci.appveyor.com/api/projects/status/gaiiwk558w097jvp/branch/master?svg=true)](https://ci.appveyor.com/project/vitkakim/aqa-l2-1/branch/master)
