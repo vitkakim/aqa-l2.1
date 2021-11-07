@@ -8,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.List;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import static org.openqa.selenium.By.className;
 import static org.openqa.selenium.By.tagName;
 
@@ -16,7 +17,7 @@ public class CallBackNegativeTest {
 
     @BeforeAll
     static void setUpAll() {
-        System.setProperty("webdriver.chrome.driver", "./driver/chromedriver");
+        WebDriverManager.chromedriver().setup();
 
     }
 

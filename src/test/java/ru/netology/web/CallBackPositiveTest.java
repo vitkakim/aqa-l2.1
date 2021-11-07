@@ -1,5 +1,6 @@
 package ru.netology.web;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,7 +17,7 @@ public class CallBackPositiveTest {
 
     @BeforeAll
     static void setUpAll() {
-        System.setProperty("webdriver.chrome.driver", "./driver/chromedriver");
+        WebDriverManager.chromedriver().setup();
 
     }
 
