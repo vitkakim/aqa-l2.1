@@ -9,11 +9,14 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import java.util.List;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import static org.openqa.selenium.By.className;
-import static org.openqa.selenium.By.tagName;
+
+import static org.openqa.selenium.By.*;
+import static org.openqa.selenium.By.cssSelector;
 
 public class CallBackNegativeTest {
     private WebDriver driver;
+    private WebElement fieldName;
+    private WebElement fieldPhone;
 
     @BeforeAll
     static void setUpAll() {
@@ -28,6 +31,9 @@ public class CallBackNegativeTest {
         options.addArguments("--no-sandbox");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
+        driver.get("http://localhost:9999");
+        fieldName = driver.findElement(cssSelector("[data-test-id='name'] input"));
+        fieldPhone = driver.findElement(cssSelector("[data-test-id='phone'] input"));
     }
 
     @AfterEach
@@ -38,96 +44,88 @@ public class CallBackNegativeTest {
 
     @Test
     void shouldBeNameNotRussianText() {
-        driver.get("http://localhost:9999");
-        List<WebElement> textFields = driver.findElements(className("input__control"));
-        textFields.get(0).sendKeys("Anisimova");
-        textFields.get(1).sendKeys("+71234567890");
-        driver.findElement(className("checkbox__box")).click();
+        fieldName.sendKeys("Anisimova");
+        fieldPhone.sendKeys("+71234567890");
+        driver.findElement(cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(tagName("button")).click();
-        List<WebElement> textResultFields = driver.findElements(className("input__sub"));
-        String actualMessage = textResultFields.get(0).getText().strip();
+        String actualMessage = driver.findElement(cssSelector("[data-test-id='name'] .input__sub")).getText().strip();
         String expectedMessage = "Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.";
         Assertions.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldBeEmptyNameTest() {
-        driver.get("http://localhost:9999");
-        List<WebElement> textFields = driver.findElements(className("input__control"));
-        textFields.get(0).sendKeys("");
-        textFields.get(1).sendKeys("+71234567890");
-        driver.findElement(className("checkbox__box")).click();
+        fieldName.sendKeys("");
+        fieldPhone.sendKeys("+71234567890");
+        driver.findElement(cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(tagName("button")).click();
-        List<WebElement> textResultFields = driver.findElements(className("input__sub"));
-        String actualMessage = textResultFields.get(0).getText().strip();
+        String actualMessage = driver.findElement(cssSelector("[data-test-id='name'] .input__sub")).getText().strip();
         String expectedMessage = "Поле обязательно для заполнения";
         Assertions.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldBeNumberLessThen11NumbersTest() {
-        driver.get("http://localhost:9999");
-        List<WebElement> textFields = driver.findElements(className("input__control"));
-        textFields.get(0).sendKeys("Анисимова Виктория Эдуардовна");
-        textFields.get(1).sendKeys("+7123456789");
-        driver.findElement(className("checkbox__box")).click();
+        fieldName.sendKeys("Анисимова Виктория Эдуардовна");
+        fieldPhone.sendKeys("+7123456789");
+        driver.findElement(cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(tagName("button")).click();
-        List<WebElement> textResultFields = driver.findElements(className("input__sub"));
-        String actualMessage = textResultFields.get(1).getText().strip();
+        String actualMessage = driver.findElement(cssSelector("[data-test-id='phone'] .input__sub")).getText().strip();
+        String expectedMessage = "Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.";
+        Assertions.assertEquals(expectedMessage, actualMessage);
+    }
+
+    @Test
+    void shouldBeNumberMoreThen11NumbersTest() {
+        fieldName.sendKeys("Анисимова Виктория Эдуардовна");
+        fieldPhone.sendKeys("+712345678901");
+        driver.findElement(cssSelector("[data-test-id='agreement']")).click();
+        driver.findElement(tagName("button")).click();
+        String actualMessage = driver.findElement(cssSelector("[data-test-id='phone'] .input__sub")).getText().strip();
         String expectedMessage = "Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.";
         Assertions.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldBeNumberWithOutPlusTest() {
-        driver.get("http://localhost:9999");
-        List<WebElement> textFields = driver.findElements(className("input__control"));
-        textFields.get(0).sendKeys("Анисимова Виктория Эдуардовна");
-        textFields.get(1).sendKeys("71234567890");
-        driver.findElement(className("checkbox__box")).click();
+        fieldName.sendKeys("Анисимова Виктория Эдуардовна");
+        fieldPhone.sendKeys("71234567890");
+        driver.findElement(cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(tagName("button")).click();
-        List<WebElement> textResultFields = driver.findElements(className("input__sub"));
-        String actualMessage = textResultFields.get(1).getText().strip();
+        String actualMessage = driver.findElement(cssSelector("[data-test-id='phone'] .input__sub")).getText().strip();
         String expectedMessage = "Телефон указан неверно. Должно быть 11 цифр, например, +79012345678.";
         Assertions.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldBeEmptyNumberTest() {
-        driver.get("http://localhost:9999");
-        List<WebElement> textFields = driver.findElements(className("input__control"));
-        textFields.get(0).sendKeys("Анисимова Виктория Эдуардовна");
-        textFields.get(1).sendKeys("");
-        driver.findElement(className("checkbox__box")).click();
+        fieldName.sendKeys("Анисимова Виктория Эдуардовна");
+        fieldPhone.sendKeys("");
+        driver.findElement(cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(tagName("button")).click();
-        List<WebElement> textResultFields = driver.findElements(className("input__sub"));
-        String actualMessage = textResultFields.get(1).getText().strip();
+        String actualMessage = driver.findElement(cssSelector("[data-test-id='phone'] .input__sub")).getText().strip();
         String expectedMessage = "Поле обязательно для заполнения";
         Assertions.assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
     void shouldBeNotClickedCheckBoxTest() {
-        driver.get("http://localhost:9999");
-        List<WebElement> textFields = driver.findElements(className("input__control"));
-        textFields.get(0).sendKeys("Анисимова Виктория Эдуардовна");
-        textFields.get(1).sendKeys("+71234567890");
+        fieldName.sendKeys("Анисимова Виктория Эдуардовна");
+        fieldPhone.sendKeys("+71234567890");
         driver.findElement(tagName("button")).click();
-        WebElement actualMessage = driver.findElement(className("checkbox__box"));
-        Assertions.assertFalse(actualMessage.isSelected());
+        WebElement actualMessage = driver.findElement(className("input_invalid"));
+        String color = actualMessage.getCssValue("color");
+        Assertions.assertEquals("rgba(255, 92, 92, 1)", color);
     }
 
     @Test
     @Disabled
     void shouldBeNegativeButItPositiveTest() {
-        driver.get("http://localhost:9999");
-        List<WebElement> textFields = driver.findElements(className("input__control"));
-        textFields.get(0).sendKeys("Анисимова");
-        textFields.get(1).sendKeys("+71234567890");
-        driver.findElement(className("checkbox__box")).click();
+        fieldName.sendKeys("Анисимова");
+        fieldPhone.sendKeys("+71234567890");
+        driver.findElement(cssSelector("[data-test-id='agreement']")).click();
         driver.findElement(tagName("button")).click();
-        List<WebElement> textResultFields = driver.findElements(className("input__sub"));
-        String actualMessage = textResultFields.get(0).getText().strip();
+        String actualMessage = driver.findElement(cssSelector("[data-test-id='name'] .input__sub")).getText().strip();
         String expectedMessage = "Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы.";
         Assertions.assertEquals(expectedMessage, actualMessage);
     }
